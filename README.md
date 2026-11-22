@@ -1,7 +1,7 @@
 # Cisco Packet Tracer 8.2.2 on an Immutable Distro (Distrobox + Podman)
 
 Install Packet Tracer 8.x inside an offline Ubuntu 20.04 container. Cutting the
-container's network after installation bypasses the Cisco login requirement —
+container's network after installation bypasses the Cisco login requirement, and
 your host keeps internet.
 
 Tested on Universal Blue (Bazzite/Bluefin). Works with **Packet Tracer 8.x only**
@@ -34,7 +34,7 @@ podman network create network
 
 ## 2. Create the container (host)
 
-`--unshare-netns` is essential — without it the container shares the host's
+`--unshare-netns` is essential. Without it, the container shares the host's
 network and can never be taken offline.
 
 ```bash
@@ -90,8 +90,8 @@ With no network, PT skips the login screen and runs in guest mode.
 
 ## Maintenance
 
-- Nothing to update — the container is offline by design and PT doesn't need it.
-- **Never run `podman system prune` / `podman container prune`** — it can delete
+- Nothing to update. The container is offline by design and PT doesn't need it.
+- **Never run `podman system prune` / `podman container prune`**. It can delete
   the container if it's stopped.
 - `.pt` project files live in your home directory and survive rebuilds.
 - Host OS updates don't affect the container.
@@ -100,7 +100,7 @@ With no network, PT skips the login screen and runs in guest mode.
 
 - **Login screen still appears** → the container still has internet. Verify with
   `distrobox enter pt -- ping -c1 cisco.com` (should fail). If it succeeds, the
-  container was created without `--unshare-netns` — rebuild from step 0.
+  container was created without `--unshare-netns`. Rebuild from step 0.
 - **`packettracer` prints "Starting..." then nothing / core dump** → missing
   libraries. Re-run step 3; check with
   `distrobox enter pt -- bash -c 'cd /opt/pt/bin && ldd PacketTracer | grep "not found"'`.
